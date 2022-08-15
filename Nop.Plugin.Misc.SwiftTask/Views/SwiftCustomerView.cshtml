@@ -1,0 +1,73 @@
+﻿@model SwiftCustomerModel
+
+@using Nop.Core;
+@using Nop.Plugin.Misc.SwiftTask
+@using Nop.Plugin.Misc.SwiftTask.Models
+
+<link rel="stylesheet" href="~/Plugins/Misc.SwiftTask/Content/style.css" />
+
+<div class = "form-wrapper">
+    <nop-cards id="sendinblue-cards" class = "form-card">
+        <h2>Swift Customer Form</h2>
+    <div class="form-group row">
+        <div class="title1">
+            @Html.DisplayNameFor(model => model.CustomerName)
+        </div>
+        <div class="field1">
+            <nop-editor class="input1" asp-for="CustomerName"/>
+            <nop-required />
+            <span id = "customer-validation" asp-validation-for="CustomerName"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="title1">
+            <nop-label asp-for="AgeRange" />
+        </div>
+        <div class="field1">
+            <nop-select asp-for="AgeRange" asp-items="Model.AgeRangeList" class="input1"/>
+            <nop-required />
+            <span asp-validation-for="AgeRange"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        @Html.CheckBoxFor(model => model.IsValid)
+        <label for="IsValid" class = "isvalid-label">IsValid</label>
+    </div> 
+    <div class="button-group row">
+        <button id = "saveCustomer" type="submit" name="save" class="btn btn-primary">Save</button>
+    </div>
+</nop-cards>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('#saveCustomer').click(function () {
+            debugger;
+            var postData = {
+                CustomerName: $("#@Html.IdFor(model => model.CustomerName)").val(),
+                IsValid: $("#@Html.IdFor(model => model.IsValid)").is(":checked"),
+                AgeRange: $("#@Html.IdFor(model => model.AgeRange)").val()
+            };
+            if(postData.CustomerName == ""){
+                $("#customer-validation").html("Name field is mandatory");
+                $("#customer-validation").css('color', 'red');
+            }else{
+                $("#customer-validation").html("");
+            }
+            $.ajax({
+                cache: false,
+                type: "POST",
+                url: "@Url.Action("SaveCustomer", "SwiftCustomer")",
+                data: postData,
+                success: function (data, textStatus, jqXHR) {
+                    console.log(data);
+                    if (data != "Failed") {
+                        alert("Thank you for submitting the form.");
+                    }
+                },
+                complete: function (jqXHR, textStatus) {
+                }
+            });
+        });
+    });
+</script>

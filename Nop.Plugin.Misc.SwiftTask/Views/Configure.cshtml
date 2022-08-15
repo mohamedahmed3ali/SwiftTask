@@ -1,0 +1,30 @@
+﻿@using Nop.Web.Framework.Models.DataTables
+@using Nop.Plugin.Misc.SwiftTask.Models
+@{
+    Layout = "_ConfigurePlugin";
+}
+
+@await Html.PartialAsync("Table", new DataTablesModel
+{
+    Name = "SwiftCustomerList-grid",
+    UrlRead = new DataUrl("GetSwiftCustomersList", "SwiftCustomer",null),
+    Paging = false,
+    ColumnCollection = new List<ColumnProperty>
+    {
+        new ColumnProperty(nameof(SwiftCustomerModel.CustomerName))
+        {
+            Title = "Name",
+            Width = "300"
+        },
+        new ColumnProperty(nameof(SwiftCustomerModel.IsValid))
+        {
+            Title = "Is Valid",
+            Width = "100"
+        },
+        new ColumnProperty(nameof(SwiftCustomerModel.AgeRange))
+        {
+            Title = "Age Range",
+            Width = "100"
+        }
+    }
+})
